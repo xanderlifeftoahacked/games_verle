@@ -35,7 +35,7 @@ struct VerletObject {
 
     positionCurrent += velocity + constants::gravity * dt * dt;
 
-    acceleration = {};
+    // acceleration = {};
 
     sfShape.setPosition(positionCurrent.x, positionCurrent.y);
   }

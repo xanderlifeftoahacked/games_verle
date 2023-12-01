@@ -1,0 +1,3 @@
+/home/xander/Code/Cpp/VerleEngine/build/CMakeFiles/main.dir
+/home/xander/Code/Cpp/VerleEngine/build/CMakeFiles/edit_cache.dir
+/home/xander/Code/Cpp/VerleEngine/build/CMakeFiles/rebuild_cache.dir
