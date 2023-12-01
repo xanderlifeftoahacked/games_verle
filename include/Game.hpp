@@ -1,8 +1,10 @@
 #pragma once
 #include "Constants.hpp"
+#include "Link.hpp"
 #include "Vector2.hpp"
 #include "VerletObject.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Window.hpp>
 #include <functional>
@@ -21,10 +23,18 @@ public:
     statistics.setFont(font);
   };
 
-  void addObject(float xPos, float yPos, float radius,
-                 sf::Color color = sf::Color(sf::Color::Blue)) {
-    VerletObject *obj = new VerletObject(xPos, yPos, radius, color);
+  std::vector<VerletObject *> getObjects() { return objects; }
+
+  void addObject(float xPos, float yPos, float radius, bool isMoveable = true,
+                 sf::Color color = sf::Color(sf::Color::White)) {
+    VerletObject *obj = new VerletObject(xPos, yPos, radius, isMoveable, color);
     objects.push_back(obj);
+  }
+
+  void addLink(eng::VerletObject *obj_1, eng::VerletObject *obj_2,
+               float targDist) {
+    Link *link = new Link(obj_1, obj_2, targDist);
+    links.push_back(link);
   }
 
   void update(float dt) {
@@ -38,18 +48,37 @@ public:
     dt = dt / float(iterations);
     while (iterations--) {
       applyGravity();
-      applyConstraint();
+      applyLinks();
+      // applyConstraint();
       solveCollisions();
       updatePositions(dt);
     }
-    for (auto *object : objects) {
-      window->draw(object->sfShape);
+
+    auto object = std::begin(objects);
+    while (object != std::end(objects)) {
+      if (!(*object)->isOnScreen()) {
+        object = objects.erase(object);
+        continue;
+      }
+      window->draw((*object++)->sfShape);
     }
+
+    auto link = std::begin(links);
+    while (link != std::end(links)) {
+      if (!(*link)->object_1->isOnScreen() &&
+          !(*link)->object_2->isOnScreen()) {
+        link = links.erase(link);
+        continue;
+      }
+      window->draw((*link++)->line, 2, sf::Lines);
+    }
+
     window->draw(statistics);
   }
 
 private:
   std::vector<VerletObject *> objects;
+  std::vector<Link *> links;
   sf::RenderWindow *window;
   sf::Text statistics;
   sf::Font font;
@@ -63,6 +92,12 @@ private:
   void applyGravity() {
     for (auto *object : objects) {
       object->accelerate(constants::gravity);
+    }
+  }
+
+  void applyLinks() {
+    for (auto *link : links) {
+      link->apply();
     }
   }
 
