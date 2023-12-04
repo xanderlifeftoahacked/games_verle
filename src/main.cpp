@@ -1,6 +1,5 @@
 #include "Constants.hpp"
 #include "Game.hpp"
-#include "Random.hpp"
 #include "Utils.hpp"
 #include "Vector2.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
@@ -31,11 +30,11 @@ int main() {
 
   sf::Clock deltaClock;
   sf::Time dt;
-  unsigned short int counter_r = 0;
-  unsigned short int counter_g = 0;
+
+  // game.addSquare(400, 400, 100, sf::Color::Red);
 
 #ifdef SECONDCASE
-  for (int x = constants::boxX1 + 500; x <= constants::boxX2 - 500;
+  for (int x = constants::boxX1 + 300; x <= constants::boxX2 - 300;
        x += constants::objRadius * 2) {
     game.addObject(x, constants::boxY1 + 400, constants::objRadius);
   }
@@ -69,20 +68,52 @@ int main() {
       if (event.type == sf::Event::Closed)
         window.close();
     }
-    if (counter++ % 1 == 0) {
-      game.addObject(constants::boxX1 + constants::objRadius,
-                     constants::boxY1 + 20, constants::objRadius, true,
-                     utils::getRainbow(counter));
 
-      game.addObject(constants::boxX2 - constants::objRadius,
-                     constants::boxY1 + 20 * 3, constants::objRadius, true,
+    ++counter;
+#ifdef SECONDCASE
+#ifdef RAINCASE
+    if (counter % 2 == 0) {
+
+      game.addObject(constants::boxX1 + constants::objRadius,
+                     constants::boxY1 + 5, constants::objRadius, true,
                      utils::getRainbow(counter));
+      //
+      game.addObject(constants::boxX1 + constants::objRadius,
+                     constants::boxY1 + 10, constants::objRadius, true,
+                     utils::getRainbow(counter));
+      //
+      // game.addObject(constants::boxX1 + constants::objRadius * 3,
+      //                constants::boxY1 + 40, constants::objRadius, true,
+      //                utils::getRainbow(counter));
+      // //
+      // game.addObject(constants::boxX2 - constants::objRadius * 3,
+      //                constants::boxY1 + 40 * 3, constants::objRadius, true,
+      //                utils::getRainbow(counter));
+      // //
+      // game.addObject(constants::boxX1 + constants::objRadius * 3,
+      //                constants::boxY1 + 60, constants::objRadius, true,
+      //                utils::getRainbow(counter));
+      // //
+      // game.addObject(constants::boxX2 - constants::objRadius * 3,
+      //                constants::boxY1 + 60 * 3, constants::objRadius, true,
+      //                utils::getRainbow(counter));
+    }
+#endif
+#endif
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && counter % 10 == 0) {
+      sf::Vector2i position = sf::Mouse::getPosition(window);
+      game.addSquare(position.x, position.y, utils::getRandomInt(1, 10) * 10,
+                     utils::getRainbow(counter));
+      // game.addObject(position.x, position.y, constants::objRadius, true,
+      //                utils::getRainbow(counter));
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-      sf::Vector2i position = sf::Mouse::getPosition(window);
-      game.addObject(position.x, position.y, constants::objRadius, true,
-                     sf::Color::Yellow);
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && counter % 5 == 0) {
+      // sf::Vector2i position = sf::Mouse::getPosition(window);
+      // game.addObject(position.x, position.y, constants::objRadius, false,
+      //                sf::Color::Yellow);
+      game.startMoving();
     }
 
     window.clear();
