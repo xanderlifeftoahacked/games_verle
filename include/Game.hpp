@@ -54,7 +54,6 @@ public:
 
        << "Links: " << links.size() << '\n'
        << "Frametime: " << dt * 1000 << " ms\n";
-    // << "PhysicsTime: " << physTime.asSeconds() * 1000 << " ms";
     std::string stats(std::istreambuf_iterator<char>(ss), {});
 
     statistics.setString(stats);
@@ -108,8 +107,6 @@ public:
           addLink(square[y][x], square[y - 1][x], linklength);
         if (y >= 1 && x >= 1)
           addLink(square[y][x], square[y - 1][x - 1], linklength * sqrt(2));
-        // if (x < objectsInRow - 1 && y >= 1 && utils::getRandomInt(0, 1))
-        //   addLink(square[y][x], square[y - 1][x + 1], linklength * sqrt(2));
       }
     }
   }
@@ -120,21 +117,13 @@ public:
       (*obj)->isMoveable = true;
     }
   }
-  //
-  // void makeBoom(int x, int y) {
-  //   VerletObject *obj = new VerletObject(x, y, constants::objRadius, true,
-  //                                        sf::Color::Transparent);
-  //   explosionObjects.push_back(obj);
-  // }
 
 private:
   utils::ThreadPool threadpool;
   CollisionGrid grid;
   sf::Clock deltaClock;
   sf::Time physTime;
-  // int objectsCount = 0;
   std::vector<VerletObject *> objects;
-  // std::vector<VerletObject *> explosionObjects;
   std::vector<Link *> links;
   sf::RenderWindow *window;
   sf::Text statistics;
