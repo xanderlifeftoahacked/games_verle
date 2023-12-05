@@ -22,6 +22,8 @@
 namespace eng {
 class Game {
 public:
+  int firstUnstatic;
+
   Game(sf::RenderWindow *_window) : window{_window}, grid{}, objects{} {
     font.loadFromFile("/usr/share/fonts/TTF/FiraCode-Bold.ttf");
     statistics.setPosition(20, 20);
@@ -38,6 +40,8 @@ public:
     objects.push_back(obj);
   }
 
+  VerletObject *getLastObj() { return objects[objects.size() - 1]; }
+
   void addLink(eng::VerletObject *obj_1, eng::VerletObject *obj_2,
                float targDist) {
     Link *link = new Link(obj_1, obj_2, targDist);
@@ -47,22 +51,24 @@ public:
   void update(float dt) {
     std::stringstream ss;
     ss << "Objects: " << objects.size() << '\n'
-       << "Frametime: " << dt * 1000 << " ms\n"
-       << "PhysicsTime: " << physTime.asSeconds() * 1000 << " ms";
+
+       << "Links: " << links.size() << '\n'
+       << "Frametime: " << dt * 1000 << " ms\n";
+    // << "PhysicsTime: " << physTime.asSeconds() * 1000 << " ms";
     std::string stats(std::istreambuf_iterator<char>(ss), {});
 
     statistics.setString(stats);
     int iterations = constants::physicSteps;
-    dt = dt / float(iterations);
+    dt = dt / static_cast<float>(iterations);
     while (iterations--) {
       applyGravity();
       applyLinks();
 #ifdef FIRSTCASE
       applyConstraint();
 #endif
-#ifdef SECONDCASE
-      // apllyScreenConstraint();
-#endif
+      // #ifdef SECONDCASE
+      apllyScreenConstraint();
+      // #endif
       solveCollisions();
       updatePositions(dt);
       grid.updateGrid(objects);
@@ -124,7 +130,6 @@ public:
 private:
   utils::ThreadPool threadpool;
   CollisionGrid grid;
-  int firstUnstatic = constants::staticObjectsCount;
   sf::Clock deltaClock;
   sf::Time physTime;
   // int objectsCount = 0;
@@ -202,16 +207,27 @@ private:
     }
   }
 #endif
-#ifdef SECONDCASE
+
   void apllyScreenConstraint() {
     for (auto *object : objects) {
       if (object->positionCurrent.x > constants::boxX2) {
         object->positionCurrent.x -=
             (object->positionCurrent.x - constants::boxX2);
       }
+      if (object->positionCurrent.x < constants::boxX1) {
+        object->positionCurrent.x +=
+            abs(object->positionCurrent.x - constants::boxX1);
+      }
+      if (object->positionCurrent.y > constants::boxY2) {
+        object->positionCurrent.y -=
+            (object->positionCurrent.y - constants::boxY2);
+      }
+      if (object->positionCurrent.y < constants::boxY1) {
+        object->positionCurrent.y -=
+            (object->positionCurrent.y - constants::boxY1);
+      }
     }
   }
-#endif
 
   void solveCollisions() {
     std::vector<std::thread> threads;
@@ -222,10 +238,6 @@ private:
             [this, x, y]() { this->solveCollisionsThread(x, y); });
       }
     }
-
-    // for (auto &th : threads) {
-    //   th.join();
-    // }
   }
 
   void solveCollisionsThread(int threadNumberX, int threadNumberY) {

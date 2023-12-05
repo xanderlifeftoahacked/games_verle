@@ -4,6 +4,8 @@
 #include "VerletObject.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <iterator>
+#include <mutex>
+#include <thread>
 #include <vector>
 
 namespace eng {
@@ -22,12 +24,9 @@ struct CollisionGrid {
       constants::gridStep;
 
   std::vector<std::vector<Cell>> grid;
+  std::mutex mutex;
 
   CollisionGrid() : grid(height, std::vector<Cell>(width)) {}
-  //
-  // std::vector<VerletObject *> getObjects(int x, int y) {
-  //   return grid[y][x].cellObjects;
-  // };
 
   void updateGrid(std::vector<VerletObject *> &objects) {
     for (int x = 0; x < width; ++x) {
@@ -84,6 +83,7 @@ struct CollisionGrid {
           for (auto object2 : grid[y + dy][x + dx].cellObjects) {
             if (!isCollideable(object1, object2))
               continue;
+
             collide(object1, object2);
           }
         }

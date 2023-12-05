@@ -26,27 +26,27 @@ public:
     }
     mutexCondition.notify_one();
   }
-
-  void stop() {
-    {
-      std::unique_lock<std::mutex> lock(queueMutex);
-      shouldTerminate = true;
-    }
-    mutexCondition.notify_all();
-    for (auto &thread : threads) {
-      thread.join();
-    }
-    threads.clear();
-  }
-
-  bool isBusy() {
-    bool poolBusy;
-    {
-      std::unique_lock<std::mutex> lock(queueMutex);
-      poolBusy = !jobs.empty();
-    }
-    return poolBusy;
-  }
+  //
+  // void stop() {
+  //   {
+  //     std::unique_lock<std::mutex> lock(queueMutex);
+  //     shouldTerminate = true;
+  //   }
+  //   mutexCondition.notify_all();
+  //   for (auto &thread : threads) {
+  //     thread.join();
+  //   }
+  //   threads.clear();
+  // }
+  //
+  // bool isBusy() {
+  //   bool poolBusy;
+  //   {
+  //     std::unique_lock<std::mutex> lock(queueMutex);
+  //     poolBusy = !jobs.empty();
+  //   }
+  //   return poolBusy;
+  // }
 
 private:
   void threadLoop() {
