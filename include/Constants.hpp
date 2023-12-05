@@ -4,6 +4,8 @@
 // #define FIRSTCASE
 #define SECONDCASE
 #define RAINCASE
+// #define SCREENCONSTRAINT
+// #define ONETHREAD
 namespace constants {
 const inline eng::Vec2 gravity = {0.0f, 1000.0f};
 const inline int screenWidth = 1296;
@@ -12,8 +14,7 @@ const inline float areaRadius = 300.f;
 const inline float areaX = constants::screenWidth / 2.f;
 const inline float areaY = constants::screenHeight / 2.f;
 const inline float objRadius = 4.f;
-const inline int staticObjectsCount = 555;
-const inline int physicSteps = 4;
+const inline int physicSteps = 6;
 const inline int gridStep = 2 * objRadius;
 const inline int numberOfThreadsX = 8;
 const inline int numberOfThreadsY = 4;
