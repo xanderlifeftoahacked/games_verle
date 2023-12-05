@@ -77,10 +77,10 @@ int main() {
 
     ++counter;
 #ifdef RAINCASE
-    if (counter % 10 == 0) {
+    if (counter % 1 == 0) {
 
       game.addObject(constants::boxX1 + constants::objRadius - 1,
-                     constants::boxY1 + constants::objRadius * 3,
+                     constants::boxY1 + constants::objRadius,
                      constants::objRadius, true, utils::getRainbow(counter));
     }
 #endif

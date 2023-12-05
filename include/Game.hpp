@@ -66,9 +66,9 @@ public:
 #ifdef FIRSTCASE
       applyConstraint();
 #endif
-      // #ifdef SECONDCASE
+#ifdef SCREENCONSTRAINT
       apllyScreenConstraint();
-      // #endif
+#endif
       solveCollisions();
       updatePositions(dt);
       grid.updateGrid(objects);
@@ -208,6 +208,7 @@ private:
   }
 #endif
 
+#ifdef SCREENCONSTRAINT
   void apllyScreenConstraint() {
     for (auto *object : objects) {
       if (object->positionCurrent.x > constants::boxX2) {
@@ -228,14 +229,19 @@ private:
       }
     }
   }
+#endif
 
   void solveCollisions() {
     std::vector<std::thread> threads;
     for (int x = 0; x < constants::numberOfThreadsX; ++x) {
       for (int y = 0; y < constants::numberOfThreadsY; ++y) {
-        // solveCollisionsThread(x, y);
+#ifdef ONETHREAD
+        solveCollisionsThread(x, y);
+#endif
+#ifndef ONETHREAD
         threadpool.queueJob(
             [this, x, y]() { this->solveCollisionsThread(x, y); });
+#endif
       }
     }
   }
