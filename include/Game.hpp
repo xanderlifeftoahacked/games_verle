@@ -11,6 +11,7 @@
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Window.hpp>
+#include <cmath>
 #include <functional>
 #include <iostream>
 #include <iterator>
@@ -51,9 +52,9 @@ public:
   void update(float dt) {
     std::stringstream ss;
     ss << "Objects: " << objects.size() << '\n'
-
        << "Links: " << links.size() << '\n'
-       << "Frametime: " << dt * 1000 << " ms\n";
+       << "Frametime: " << dt * 1000 << " ms\n"
+       << "Frametime to Objects: " << dt * 1000 / objects.size() << '\n';
     std::string stats(std::istreambuf_iterator<char>(ss), {});
 
     statistics.setString(stats);
@@ -80,6 +81,38 @@ public:
   }
 
   int getCountOfObjects() { return objects.size(); }
+
+  void addCircle(const float pos_x, const float pos_y,
+                 const float radius = 50) {
+    const int indexOfCenter = this->getCountOfObjects();
+    const int numberOfObjects = 16;
+    const float radStep = std::numbers::pi / numberOfObjects * 2;
+    addObject(pos_x, pos_y, constants::objRadius, false);
+
+    for (int i = 0; i < numberOfObjects; ++i) {
+      float x = pos_x + radius * std::sin(radStep * i);
+      float y = pos_y + radius * std::cos(radStep * i);
+      addObject(x, y, constants::objRadius, false);
+      if (!(i % 2))
+        addLink(objects[objects.size() - 1], objects[indexOfCenter], radius);
+
+      auto cur = objects[objects.size() - 1];
+      auto prev = objects[objects.size() - 2];
+      float dist = std::sqrt(
+          std::pow((cur->positionCurrent.x - prev->positionCurrent.x), 2) +
+          std::pow((cur->positionCurrent.y - prev->positionCurrent.y), 2));
+
+      addLink(cur, prev, dist);
+    }
+
+    auto cur = objects[indexOfCenter + 1];
+    auto prev = objects[objects.size() - 1];
+    float dist = std::sqrt(
+        std::pow((cur->positionCurrent.x - prev->positionCurrent.x), 2) +
+        std::pow((cur->positionCurrent.y - prev->positionCurrent.y), 2));
+
+    addLink(cur, prev, dist);
+  }
 
   void addSquare(float pos_x, float pos_y, float size, sf::Color color) {
 
@@ -221,7 +254,6 @@ private:
 #endif
 
   void solveCollisions() {
-    std::vector<std::thread> threads;
     for (int x = 0; x < constants::numberOfThreadsX; ++x) {
       for (int y = 0; y < constants::numberOfThreadsY; ++y) {
 #ifdef ONETHREAD
@@ -233,6 +265,7 @@ private:
 #endif
       }
     }
+    threadpool.waitForCompletion();
   }
 
   void solveCollisionsThread(int threadNumberX, int threadNumberY) {

@@ -89,6 +89,7 @@ int main() {
       sf::Vector2i position = sf::Mouse::getPosition(window);
       game.addSquare(position.x, position.y, utils::getRandomInt(1, 10) * 10,
                      utils::getRainbow(counter));
+      // game.addCircle(position.x, position.y);
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && counter % 5 == 0) {

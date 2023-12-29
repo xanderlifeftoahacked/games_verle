@@ -83,7 +83,6 @@ struct CollisionGrid {
           for (auto object2 : grid[y + dy][x + dx].cellObjects) {
             if (!isCollideable(object1, object2))
               continue;
-
             collide(object1, object2);
           }
         }

@@ -2,6 +2,7 @@
 #include "Constants.hpp"
 #include <condition_variable>
 #include <functional>
+#include <iostream>
 #include <mutex>
 #include <queue>
 #include <thread>
@@ -26,27 +27,12 @@ public:
     }
     mutexCondition.notify_one();
   }
-  //
-  // void stop() {
-  //   {
-  //     std::unique_lock<std::mutex> lock(queueMutex);
-  //     shouldTerminate = true;
-  //   }
-  //   mutexCondition.notify_all();
-  //   for (auto &thread : threads) {
-  //     thread.join();
-  //   }
-  //   threads.clear();
-  // }
-  //
-  // bool isBusy() {
-  //   bool poolBusy;
-  //   {
-  //     std::unique_lock<std::mutex> lock(queueMutex);
-  //     poolBusy = !jobs.empty();
-  //   }
-  //   return poolBusy;
-  // }
+
+  void waitForCompletion() {
+    while (jobs.size()) {
+      std::this_thread::yield();
+    }
+  }
 
 private:
   void threadLoop() {
