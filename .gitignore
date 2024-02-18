@@ -1,4 +1,10 @@
 cmake_build_Debug/
 cmake_build_Release/
 .cache/
+.cmake/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+main
+Makefile
 

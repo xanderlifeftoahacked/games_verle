@@ -3,7 +3,6 @@
 #include "Grid.hpp"
 #include "Link.hpp"
 #include "ThreadPool.hpp"
-#include "Utils.hpp"
 #include "Vector2.hpp"
 #include "VerletObject.hpp"
 #include <SFML/Graphics.hpp>
@@ -17,7 +16,6 @@
 #include <iterator>
 #include <sstream>
 #include <string>
-#include <thread>
 #include <vector>
 
 namespace eng {

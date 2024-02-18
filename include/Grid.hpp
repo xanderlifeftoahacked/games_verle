@@ -1,11 +1,9 @@
 #pragma once
-
 #include "Constants.hpp"
 #include "VerletObject.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <iterator>
 #include <mutex>
-#include <thread>
 #include <vector>
 
 namespace eng {

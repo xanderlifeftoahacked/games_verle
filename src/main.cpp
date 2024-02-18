@@ -1,7 +1,6 @@
 #include "Constants.hpp"
 #include "Game.hpp"
 #include "Utils.hpp"
-#include "Vector2.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -10,8 +9,6 @@
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
-#include <iostream>
-#include <math.h>
 
 int main() {
   sf::RenderWindow window(
