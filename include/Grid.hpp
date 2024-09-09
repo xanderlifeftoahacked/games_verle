@@ -5,7 +5,6 @@
 #include <SFML/Graphics/Color.hpp>
 #include <iterator>
 #include <mutex>
-#include <thread>
 #include <vector>
 
 namespace eng {

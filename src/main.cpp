@@ -1,7 +1,6 @@
 #include "Constants.hpp"
 #include "Game.hpp"
 #include "Utils.hpp"
-#include "Vector2.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -10,8 +9,6 @@
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
-#include <iostream>
-#include <math.h>
 
 int main() {
   sf::RenderWindow window(
@@ -28,7 +25,7 @@ int main() {
 #endif
 
 #ifdef SECONDCASE
-  for (int x = constants::boxX1 + 300; x <= constants::boxX2 - 300;
+  for (size_t x = constants::boxX1 + 300; x <= constants::boxX2 - 300;
        x += constants::objRadius * 2) {
     game.addObject(x, constants::boxY1 + 400, constants::objRadius);
   }
@@ -40,25 +37,25 @@ int main() {
     game.addLink(objs[i], objs[i + 1], constants::objRadius * 2);
   }
 
-  for (int x = constants::boxX1; x <= constants::boxX2;
+  for (size_t x = constants::boxX1; x <= constants::boxX2;
        x += constants::objRadius * 2) {
     game.addObject(x, constants::boxY1, constants::objRadius, false);
     game.addObject(x, constants::boxY2, constants::objRadius, false);
   }
 
-  for (int y = constants::boxY1; y <= constants::boxY2;
+  for (size_t y = constants::boxY1; y <= constants::boxY2;
        y += constants::objRadius * 2) {
     game.addObject(constants::boxX1, y, constants::objRadius, false);
     game.addObject(constants::boxX2, y, constants::objRadius, false);
   }
 #endif
 
-  for (int x = constants::boxX1; x <= constants::boxX1 * 3;
+  for (size_t x = constants::boxX1; x <= constants::boxX1 * 3;
        x += constants::objRadius * 2) {
     game.addObject(x, constants::boxY1, constants::objRadius, false);
   }
 
-  for (int y = constants::boxY1; y <= constants::boxY1 * 3;
+  for (size_t y = constants::boxY1; y <= constants::boxY1 * 3;
        y += constants::objRadius * 2) {
     game.addObject(constants::boxX1, y, constants::objRadius, false);
   }

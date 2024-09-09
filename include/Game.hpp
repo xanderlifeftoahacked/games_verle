@@ -3,7 +3,6 @@
 #include "Grid.hpp"
 #include "Link.hpp"
 #include "ThreadPool.hpp"
-#include "Utils.hpp"
 #include "Vector2.hpp"
 #include "VerletObject.hpp"
 #include <SFML/Graphics.hpp>
@@ -15,9 +14,9 @@
 #include <functional>
 #include <iostream>
 #include <iterator>
+#include <numbers>
 #include <sstream>
 #include <string>
-#include <thread>
 #include <vector>
 
 namespace eng {
@@ -89,7 +88,7 @@ public:
     const float radStep = std::numbers::pi / numberOfObjects * 2;
     addObject(pos_x, pos_y, constants::objRadius, false);
 
-    for (int i = 0; i < numberOfObjects; ++i) {
+    for (size_t i = 0; i < numberOfObjects; ++i) {
       float x = pos_x + radius * std::sin(radStep * i);
       float y = pos_y + radius * std::cos(radStep * i);
       addObject(x, y, constants::objRadius, false);
@@ -132,8 +131,8 @@ public:
     }
 
     addLink(square[0][0], square[0][1], linklength);
-    for (int y = 0; y < objectsInRow; ++y) {
-      for (int x = 0; x < objectsInRow; ++x) {
+    for (size_t y = 0; y < objectsInRow; ++y) {
+      for (size_t x = 0; x < objectsInRow; ++x) {
         if (x < objectsInRow - 1)
           addLink(square[y][x], square[y][x + 1], linklength);
         if (y >= 1)
@@ -254,8 +253,8 @@ private:
 #endif
 
   void solveCollisions() {
-    for (int x = 0; x < constants::numberOfThreadsX; ++x) {
-      for (int y = 0; y < constants::numberOfThreadsY; ++y) {
+    for (size_t x = 0; x < constants::numberOfThreadsX; ++x) {
+      for (size_t y = 0; y < constants::numberOfThreadsY; ++y) {
 #ifdef ONETHREAD
         solveCollisionsThread(x, y);
 #endif
@@ -269,16 +268,16 @@ private:
   }
 
   void solveCollisionsThread(int threadNumberX, int threadNumberY) {
-    int xstart =
+    size_t xstart =
         1 + (grid.width - 2) / constants::numberOfThreadsX * threadNumberX;
-    int xend = xstart + (grid.width - 2) / constants::numberOfThreadsX - 1;
+    size_t xend = xstart + (grid.width - 2) / constants::numberOfThreadsX - 1;
 
-    int ystart =
+    size_t ystart =
         1 + (grid.height - 2) / constants::numberOfThreadsY * threadNumberY;
-    int yend = ystart + (grid.height - 2) / constants::numberOfThreadsY - 1;
+    size_t yend = ystart + (grid.height - 2) / constants::numberOfThreadsY - 1;
 
-    for (int x = xstart; x <= xend; ++x) {
-      for (int y = ystart; y <= yend; ++y) {
+    for (size_t x = xstart; x <= xend; ++x) {
+      for (size_t y = ystart; y <= yend; ++y) {
         grid.collidecell(x, y);
       }
     }

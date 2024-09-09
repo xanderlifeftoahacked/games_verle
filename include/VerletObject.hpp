@@ -3,7 +3,6 @@
 #include "Vector2.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
-#include <iostream>
 
 namespace eng {
 struct VerletObject {
